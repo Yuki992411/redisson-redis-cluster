@@ -1,4 +1,4 @@
-package com.example.yukikom.redisson_redis_cluster
+package com.example.yukikom.redisson_redis_cluster.application
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
