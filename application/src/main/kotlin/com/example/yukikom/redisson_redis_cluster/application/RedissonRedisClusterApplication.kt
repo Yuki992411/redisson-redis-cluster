@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class RedissonRedisClusterApplication
 
 fun main(args: Array<String>) {
-	runApplication<RedissonRedisClusterApplication>(*args)
+    runApplication<RedissonRedisClusterApplication>(*args)
 }

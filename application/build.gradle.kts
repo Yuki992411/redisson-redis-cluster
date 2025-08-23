@@ -8,12 +8,12 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":infrastructure"))
-    
+
     // Spring Boot Web
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

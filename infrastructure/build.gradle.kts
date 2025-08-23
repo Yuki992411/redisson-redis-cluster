@@ -7,14 +7,14 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
-    
+
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    
+
     // Redisson
     implementation("org.redisson:redisson-spring-boot-starter:3.24.3")
-    
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
