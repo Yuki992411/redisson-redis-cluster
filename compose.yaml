@@ -3,9 +3,6 @@ services:
     image: redis:8.2
     command: >
       redis-server --port 6379
-                   --cluster-enabled yes
-                   --cluster-config-file nodes.conf
-                   --cluster-node-timeout 5000
                    --appendonly yes
     ports:
       - "6381:6379"
@@ -14,9 +11,6 @@ services:
     image: redis:8.2
     command: >
       redis-server --port 6379
-                   --cluster-enabled yes
-                   --cluster-config-file nodes.conf
-                   --cluster-node-timeout 5000
                    --appendonly yes
     ports:
       - "6382:6379"
@@ -25,9 +19,6 @@ services:
     image: redis:8.2
     command: >
       redis-server --port 6379
-                   --cluster-enabled yes
-                   --cluster-config-file nodes.conf
-                   --cluster-node-timeout 5000
                    --appendonly yes
     ports:
       - "6383:6379"

@@ -14,6 +14,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Redisson
+    implementation("org.redisson:redisson-spring-boot-starter:3.24.3")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

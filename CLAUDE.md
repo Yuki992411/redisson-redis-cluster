@@ -4,19 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Spring Boot 3.5.5とKotlin 1.9.25を使用したRedisson Redis Clusterプロジェクトです。Java 21をターゲットとし、オニオンアーキテクチャに基づいたマルチモジュール構成になっています。
+Spring Boot 3.5.5 と Kotlin 1.9.25 を使用した Redisson Redis Cluster プロジェクトです。Java 21 をターゲットとし、オニオンアーキテクチャに基づいたマルチモジュール構成になっています。分散ロックを使用した重複リクエスト防止機能を実装しています。
 
 ## オニオンアーキテクチャ構成
 
-このプロジェクトは以下の3つのモジュールで構成されています：
+このプロジェクトは以下の 3 つのモジュールで構成されています：
 
-- **domain**: ドメインコア（エンティティ、ドメインサービス、リポジトリインターフェース）
-- **infrastructure**: 外部システムとの統合（Redis、データベース、リポジトリ実装）
-- **application**: アプリケーションサービス、ユースケース、コントローラー、プレゼンテーション層（実行可能JAR）
+-   **domain**: ドメインコア（エンティティ、ドメインサービス、リポジトリインターフェース）
+-   **infrastructure**: 外部システムとの統合（Redis、データベース、リポジトリ実装）
+-   **application**: アプリケーションサービス、ユースケース、コントローラー、プレゼンテーション層（実行可能 JAR）
 
 ## ビルドコマンド
 
 ### アプリケーションのビルド
+
 ```bash
 # 全モジュールのビルド
 ./gradlew build
@@ -27,12 +28,14 @@ Spring Boot 3.5.5とKotlin 1.9.25を使用したRedisson Redis Clusterプロジ�
 ```
 
 ### アプリケーションの実行
+
 ```bash
 # applicationモジュールの実行
 ./gradlew :application:bootRun
 ```
 
 ### テストの実行
+
 ```bash
 # 全モジュールのテスト実行
 ./gradlew test
@@ -46,11 +49,13 @@ Spring Boot 3.5.5とKotlin 1.9.25を使用したRedisson Redis Clusterプロジ�
 ```
 
 ### クリーンビルド
+
 ```bash
 ./gradlew clean build
 ```
 
 ### 依存関係の確認
+
 ```bash
 # 全モジュールの依存関係
 ./gradlew dependencies
@@ -60,6 +65,7 @@ Spring Boot 3.5.5とKotlin 1.9.25を使用したRedisson Redis Clusterプロジ�
 ```
 
 ### コードスタイルチェック（ktlint）
+
 ```bash
 # コードスタイルチェック
 ./gradlew ktlintCheck
@@ -72,6 +78,7 @@ Spring Boot 3.5.5とKotlin 1.9.25を使用したRedisson Redis Clusterプロジ�
 ```
 
 ### 静的解析（detekt）
+
 ```bash
 # 静的解析実行
 ./gradlew detekt
@@ -91,20 +98,20 @@ application → infrastructure → domain
          domain
 ```
 
-- **application**: infrastructure, domainに依存
-- **infrastructure**: domainのみに依存
-- **domain**: 他のモジュールに依存しない（最内層）
+-   **application**: infrastructure, domain に依存
+-   **infrastructure**: domain のみに依存
+-   **domain**: 他のモジュールに依存しない（最内層）
 
 ## 技術スタック
 
-- **フレームワーク**: Spring Boot 3.5.5
-- **言語**: Kotlin 2.0.21
-- **ビルドツール**: Gradle 8.14.3
-- **Java**: Java 21 (toolchain)
-- **Redis**: Redisson 3.24.3
-- **テストフレームワーク**: JUnit 5
-- **コードフォーマッター**: ktlint 1.7.1 (Gradle plugin 12.1.2)
-- **静的解析**: detekt 1.23.8 (デフォルト設定)
+-   **フレームワーク**: Spring Boot 3.5.5
+-   **言語**: Kotlin 2.0.21
+-   **ビルドツール**: Gradle 8.14.3
+-   **Java**: Java 21 (toolchain)
+-   **Redis**: Redisson 3.24.3
+-   **テストフレームワーク**: JUnit 5
+-   **コードフォーマッター**: ktlint 1.7.1 (Gradle plugin 12.1.2)
+-   **静的解析**: detekt 1.23.8 (デフォルト設定)
 
 ## パッケージ構造（オニオンアーキテクチャ）
 
@@ -132,10 +139,85 @@ application/ (Application Services + Presentation Layer)
 
 ## 重要な注意事項
 
-- パッケージ名は`com.example.yukikom.redisson_redis_cluster`を使用（ハイフンではなくアンダースコア）
-- Kotlin compilerオプションで`-Xjsr305=strict`が有効になっており、null安全性が厳格に適用されます
-- 実行可能JARはapplicationモジュールでのみ生成されます
-- オニオンアーキテクチャの依存関係の方向を守ってください：
-  - ドメイン層（domain）は最内層で、外部に依存しない
-  - インフラ層（infrastructure）はドメイン層のみに依存
-  - アプリケーション層（application）は外側の層として、内側の層に依存可能
+-   パッケージ名は`com.example.yukikom.redisson_redis_cluster`を使用（ハイフンではなくアンダースコア）
+-   Kotlin compiler オプションで`-Xjsr305=strict`が有効になっており、null 安全性が厳格に適用されます
+-   実行可能 JAR は application モジュールでのみ生成されます
+-   オニオンアーキテクチャの依存関係の方向を守ってください：
+    -   ドメイン層（domain）は最内層で、外部に依存しない
+    -   インフラ層（infrastructure）はドメイン層のみに依存
+    -   アプリケーション層（application）は外側の層として、内側の層に依存可能
+
+## 設定管理
+
+### application.yaml
+
+設定は YAML 形式で管理され、`@ConfigurationProperties`を使用して型安全に読み込まれます。
+
+```yaml
+redis:
+    single-server:
+        address: redis://localhost:6381
+        connection-pool-size: 10
+    lock:
+        default-timeout-seconds: 30
+
+logging:
+    level:
+        com.example.yukikom.redisson_redis_cluster: DEBUG
+```
+
+### ログ設定
+
+-   **ログフレームワーク**: SLF4J + Logback
+-   **ログフォーマット**: `%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n`
+-   **ログレベル**: アプリケーション(DEBUG)、Redisson(INFO)、Spring(INFO)
+-   **設定ファイル**: `logback-spring.xml`
+
+## コーディング規約
+
+### ロギング
+
+-   **必須**: すべてのログ出力は`logger`を使用すること（`println`や`System.out`は使用禁止）
+-   **ログレベルの使い分け**:
+    -   `ERROR`: 例外やエラー状態
+    -   `INFO`: 重要な処理の開始・完了
+    -   `DEBUG`: デバッグ情報（開発環境のみ）
+
+### エラーハンドリング
+
+-   例外は適切にキャッチし、ログ出力する
+-   InterruptedException では必ず`Thread.currentThread().interrupt()`を呼ぶ
+
+### Redisson 設定
+
+-   Single Server Mode を使用（クラスターモードは現在未対応）
+-   分散ロックのタイムアウトはデフォルト 30 秒（`@PreventDuplicate`アノテーションでカスタマイズ可能）
+
+## Docker 環境
+
+### Redis 起動
+
+```bash
+docker compose up -d
+```
+
+### Redis 初期化（必要に応じて）
+
+```bash
+bash scripts/init-redis-cluster.sh
+```
+
+## 共通基盤機能
+
+### 重複リクエスト防止
+
+-   `@PreventDuplicate`アノテーションをコントローラーメソッドに付与
+-   Redisson の分散ロックを使用して API 単位でロック管理
+-   ロックキー形式: `lock:api:{request.requestURI}`
+-   重複リクエスト時は HTTP 409 (Conflict)を返却
+
+### Interceptor
+
+-   `DuplicateRequestInterceptor`: 重複リクエスト防止の実装
+-   `/api/**`パスに対して自動的に適用
+-   ThreadLocal でロック管理を行い、リクエスト完了時に確実に解放

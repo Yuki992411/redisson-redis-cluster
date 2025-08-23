@@ -53,8 +53,8 @@ subprojects {
         enableExperimentalRules.set(false)
         additionalEditorconfig.set(
             mapOf(
-                "insert_final_newline" to "true"
-            )
+                "insert_final_newline" to "true",
+            ),
         )
         filter {
             exclude("**/generated/**")
