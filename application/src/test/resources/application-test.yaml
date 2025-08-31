@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: redisson-redis-cluster
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.redisson.spring.starter.RedissonAutoConfigurationV2
+
+redis:
+  enabled: false
+  single-server:
+    address: redis://localhost:6381
+    connection-minimum-idle-size: 1
+    connection-pool-size: 10
+    timeout: 3000
+    retry-attempts: 3
+    retry-interval: 1500
+  lock:
+    default-timeout-seconds: 30
+
+logging:
+  level:
+    com.example.yukikom.redisson_redis_cluster: DEBUG
+    org.redisson: INFO
