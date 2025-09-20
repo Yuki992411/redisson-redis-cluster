@@ -1,4 +1,5 @@
 # Runtime stage only - requires pre-built JAR
+# Note: Domain module has been removed from the project
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app

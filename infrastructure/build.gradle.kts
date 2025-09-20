@@ -6,8 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":domain"))
-
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")

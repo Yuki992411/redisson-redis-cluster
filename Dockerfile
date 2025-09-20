@@ -11,12 +11,10 @@ COPY settings.gradle.kts .
 
 # Copy module build files
 COPY application/build.gradle.kts application/
-COPY domain/build.gradle.kts domain/
 COPY infrastructure/build.gradle.kts infrastructure/
 
-# Copy source code (check if exists first)
+# Copy source code
 COPY application/src application/src
-COPY domain/src domain/src
 COPY infrastructure/src infrastructure/src
 
 # Build application
