@@ -14,10 +14,7 @@ COPY application/build.gradle.kts application/
 COPY domain/build.gradle.kts domain/
 COPY infrastructure/build.gradle.kts infrastructure/
 
-# Download dependencies
-RUN ./gradlew dependencies --no-daemon
-
-# Copy source code
+# Copy source code (check if exists first)
 COPY application/src application/src
 COPY domain/src domain/src
 COPY infrastructure/src infrastructure/src
