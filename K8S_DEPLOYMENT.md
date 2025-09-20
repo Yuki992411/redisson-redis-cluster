@@ -11,9 +11,25 @@
 
 ### 1. Dockerイメージのビルド
 
+#### オプション A: ローカルビルド（開発用）
+
 ```bash
 # Docker Desktop の場合、ローカルでビルドしたイメージをそのまま使用可能
 docker build -t redisson-redis-cluster:latest .
+```
+
+#### オプション B: GHCR からプル（推奨）
+
+```bash
+# GitHub Container Registry からイメージを取得
+# パブリックイメージの場合
+docker pull ghcr.io/[owner]/redisson-redis-cluster:latest
+docker tag ghcr.io/[owner]/redisson-redis-cluster:latest redisson-redis-cluster:latest
+
+# プライベートイメージの場合
+echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+docker pull ghcr.io/[owner]/redisson-redis-cluster:latest
+docker tag ghcr.io/[owner]/redisson-redis-cluster:latest redisson-redis-cluster:latest
 ```
 
 ### 2. Kubernetesリソースのデプロイ
@@ -157,9 +173,38 @@ nc -zv redis-service 6379
 - **LoadBalancer**: Docker Desktop では自動的に localhost にマッピングされる
 - **ストレージ**: Docker Desktop のボリュームは自動的に管理される
 
+## GHCR イメージを使用する場合の設定
+
+### プライベートイメージの場合
+
+```bash
+# Secret を作成
+kubectl create secret docker-registry ghcr-secret \
+  --docker-server=ghcr.io \
+  --docker-username=YOUR_GITHUB_USERNAME \
+  --docker-password=YOUR_GITHUB_TOKEN \
+  --docker-email=YOUR_EMAIL
+
+# deployment.yaml を編集して imagePullSecrets を追加
+kubectl edit deployment redisson-redis-cluster
+```
+
+または deployment.yaml に以下を追加:
+
+```yaml
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: application
+        image: ghcr.io/[owner]/redisson-redis-cluster:latest
+```
+
 ## 本番環境への考慮事項
 
-1. **イメージレジストリ**: Docker HubやECR等のレジストリを使用
+1. **イメージレジストリ**: GHCR、Docker Hub、ECR等のレジストリを使用
 2. **Secret管理**: 機密情報はKubernetes Secretsで管理
 3. **永続化**: Redisデータの永続化が必要な場合はPersistentVolumeを設定
 4. **監視**: Prometheus、Grafana等でメトリクスを監視
