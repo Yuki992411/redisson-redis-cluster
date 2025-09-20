@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisson-redis-cluster
+  labels:
+    app: redisson-redis-cluster
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redisson-redis-cluster
+  template:
+    metadata:
+      labels:
+        app: redisson-redis-cluster
+    spec:
+      containers:
+      - name: application
+        image: redisson-redis-cluster:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: /config/application.yaml
+        - name: JAVA_OPTS
+          value: "-Xmx512m -Xms256m"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: redisson-redis-cluster-config

@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redisson-redis-cluster-config
+  labels:
+    app: redisson-redis-cluster
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: redisson-redis-cluster
+      autoconfigure:
+        exclude:
+          - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+          - org.redisson.spring.starter.RedissonAutoConfigurationV2
+    
+    redis:
+      single-server:
+        address: redis://redis-service:6379
+        connection-minimum-idle-size: 1
+        connection-pool-size: 10
+        timeout: 3000
+        retry-attempts: 3
+        retry-interval: 1500
+      lock:
+        default-timeout-seconds: 30
+    
+    logging:
+      level:
+        com.example.yukikom.redisson_redis_cluster: INFO
+        org.redisson: INFO
+    
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info
+      endpoint:
+        health:
+          show-details: always
