@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: application
-        image: redisson-redis-cluster:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/yuki992411/redisson-redis-cluster:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
           protocol: TCP
